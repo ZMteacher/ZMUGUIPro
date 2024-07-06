@@ -1,0 +1,20 @@
+﻿[
+  {
+    "Key": "LoginButton",
+    "Chinese": "登录",
+    "English": "Login",
+    "Bahasa": "tanah"
+  },
+  {
+    "Key": "ShopButton",
+    "Chinese": "商城",
+    "English": "Shop",
+    "Bahasa": "Shopping Mall"
+  },
+  {
+    "Key": "SettingButton",
+    "Chinese": "设置",
+    "English": "Setting",
+    "Bahasa": "mengatur"
+  }
+]

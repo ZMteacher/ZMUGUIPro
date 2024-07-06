@@ -1,0 +1,14 @@
+﻿[
+  {
+    "Key": "LoginButton",
+    "value": "Thai1"
+  },
+  {
+    "Key": "SettingButton",
+    "value": "Thai2"
+  },
+  {
+    "Key": "RegisterButton",
+    "value": "Thai3"
+  }
+]
