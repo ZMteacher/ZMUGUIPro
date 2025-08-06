@@ -1,0 +1,49 @@
+/*----------------------------------------------------------------
+* Title: ZM.UGUIPro
+*
+* Description: TextPro ImagePro ButtonPro TextMesh Pro
+*
+* Support Function: 高性能描边、本地多语言文本、图片、按钮双击模式、长按模式、文本顶点颜色渐变、双色渐变、三色渐变
+*
+* Usage: 右键-TextPro-ImagePro-ButtonPro-TextMeshPro
+*
+* Author: 铸梦 https://www.yxtown.com/user/38633b977fadc0db8e56483c8ee365a2cafbe96b
+*
+* Date: 2023.4.13
+*
+* Modify:
+--------------------------------------------------------------------*/
+
+using System.Collections;
+using System.Collections.Generic;
+using TMPro;//此处如出现报错：请在ZM.UGUIPro.asmdef自定义程序集中的Assembly Definition References列表中添加对Unity.TextMeshPro程序集的引用
+using UnityEngine;
+using ZM.UGUIPro;
+
+namespace ZM.UGUIPro
+{
+    [System.Serializable]
+    public class TextMeshPro : TextMeshProUGUI//此处如出现报错：请在ZM.UGUIPro.asmdef自定义程序集中的Assembly Definition References列表中添加对Unity.TextMeshPro程序集的引用
+    {
+        [SerializeField] LocalizationTextExtend m_LocalizationTextExtend = new LocalizationTextExtend();
+
+
+        protected override void Awake()
+        {
+            base.Awake();
+            if (m_LocalizationTextExtend.UseLocalization)
+                m_LocalizationTextExtend.Initializa(this);
+            m_LocalizationTextExtend.UpdateFont();
+
+            m_LocalizationTextExtend.UpdateFont();
+            m_LocalizationTextExtend.UpdateText();
+        }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            if (m_LocalizationTextExtend.UseLocalization)
+                m_LocalizationTextExtend.Release();
+        }
+    }
+}

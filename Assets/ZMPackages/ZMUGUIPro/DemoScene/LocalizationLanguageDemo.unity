@@ -241,6 +241,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -774,7 +775,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Register Account
+  m_Text: 
   winName: 
   m_TextSpacingExtend:
     m_UseTextSpacing: 0
@@ -926,7 +927,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Login
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d34c3b232930ad345a8d14c99d5a3fdf, type: 2}
   m_sharedMaterial: {fileID: 2979193228837331801, guid: d34c3b232930ad345a8d14c99d5a3fdf, type: 2}
@@ -1189,7 +1190,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Setting
+  m_Text: 
   winName: 
   m_TextSpacingExtend:
     m_UseTextSpacing: 0

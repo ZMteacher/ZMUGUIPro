@@ -14,7 +14,6 @@
 * Modify: 
 --------------------------------------------------------------------*/
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Threading.Tasks;
@@ -82,7 +81,7 @@ namespace ZM.UGUIPro
         /// <summary>
         /// 本地多语言标记
         /// </summary>
-        private string mLastUseLanguageType = "lastlanguageType";
+        private string m_LastUseLanguageType = "lastLanguageType";
        
 
         /// <summary>
@@ -90,19 +89,15 @@ namespace ZM.UGUIPro
         /// </summary>
         public async Task<int> InitLanguageConfig()
         {
-            InitLanguageType();
+            int intLanguage = PlayerPrefs.GetInt(m_LastUseLanguageType);
+            LanguageType= intLanguage == 0 ? LanguageType = LanguageType.English: LanguageType = (LanguageType)intLanguage;
+            //SystemLanguage systemLanguage = Application.systemLanguage; //系统语言  
+            PlayerPrefs.SetInt(m_LastUseLanguageType, (int)LanguageType);
+            
             return await LoadLanguageConfig();
         }
-        /// <summary>
-        /// 初始化语言配置
-        /// </summary>
-        private  void InitLanguageType()
-        {
-            int int_language = PlayerPrefs.GetInt("lastlanguageType");
-            LanguageType= int_language == 0 ? LanguageType = LanguageType.English: LanguageType = (LanguageType)int_language;
-            //SystemLanguage systemLanguage = Application.systemLanguage; //系统语言  
-            PlayerPrefs.SetInt(mLastUseLanguageType, (int)LanguageType);
-        }
+      
+        #region 多语言配置表加载
         /// <summary>
         /// 加载语言配置文件
         /// </summary>
@@ -120,23 +115,28 @@ namespace ZM.UGUIPro
             }
             return 0;
         }
+#if UNITY_EDITOR
         /// <summary>
         /// Editor模式预加载配置
         /// </summary>
-        public void PreLoadConfigEidotr()
+        private void PreLoadConfigEditor()
         {
-
             if (m_LocalizationDataList != null)
                 return;
 
-            InitLanguageType();
+            int intLanguage = PlayerPrefs.GetInt(m_LastUseLanguageType);
+            LanguageType= intLanguage == 0 ? LanguageType = LanguageType.English: LanguageType = (LanguageType)intLanguage;
+            PlayerPrefs.SetInt(m_LastUseLanguageType, (int)LanguageType);
 
-            List<LocalizationData> dataList = m_LocalizationDataconfig.LoadConfigEditor(m_LanguageType);
+            List<LocalizationData> dataList = m_LocalizationDataconfig.LoadConfigFormEditor(m_LanguageType);
             if (dataList != null)
             {
                 m_LocalizationDataListDic.Add(m_LanguageType, dataList);
             }
         }
+#endif
+        #endregion
+        
         #region 多语言获取
         /// <summary>
         /// 获取多语言数据
@@ -145,24 +145,22 @@ namespace ZM.UGUIPro
         /// <returns></returns>
         public LocalizationData GetLocalizationData(string key)
         {
-
-            LocalizationData tempdata = new LocalizationData { Key = "noConfig", value = "noConfig" };
-            if (string.IsNullOrEmpty(key)) return tempdata;
-
+            if (string.IsNullOrEmpty(key)) return new LocalizationData { Key = "noConfig", value = "noConfig" };
+            //编译器未运行模式，在加载配置时自动加载配置文件
+#if UNITY_EDITOR
             if (m_LocalizationDataList == null)
             {
-#if UNITY_EDITOR
-                PreLoadConfigEidotr();
-#else
-                PreLoadConfig();
-#endif
+                PreLoadConfigEditor();
             }
+#endif
+          
             List<LocalizationData> dataList = m_LocalizationDataList;
             if (dataList==null)
             {
                 Debug.LogError(" dataList is Null ...");
-                return tempdata;
+                return new LocalizationData { Key = "noConfig", value = "noConfig" };;
             }
+            
             for (int i = 0; i < dataList.Count; i++)
             {
                 LocalizationData data = dataList[i];
@@ -172,20 +170,18 @@ namespace ZM.UGUIPro
                 }
             }
             Debug.LogError(" key:" + key + " Can't find data!");
-            return tempdata;
+            return new LocalizationData { Key = "noConfig", value = "noConfig" };;
         }
         public string GetLocalizationDataValue(string key)
         {
             return GetLocalizationData(key).value;
         }
-        public string GetLocalizationText(string key, bool needCorrect = true)
+        public string GetLocalizationText(string key)
         {
             if (m_LocalizationDataList == null)
             {
 #if UNITY_EDITOR
-                PreLoadConfigEidotr();
-#else
-                PreLoadConfig();
+                PreLoadConfigEditor();
 #endif
             }
             if (m_LocalizationDataList == null)
@@ -208,28 +204,36 @@ namespace ZM.UGUIPro
             return (int)m_LanguageType;
 
         }
-        public string GetLanguageTypeName()
-        {
-            return m_LanguageType.ToString();
-        }
+        
         #endregion
+
+        #region 多语言切换
+
+        /// <summary>
+        /// 切换语言
+        /// </summary>
+        /// <param name="language"></param>
+        /// <returns></returns>
         public async Task<string> SwitchLanguage(LanguageType language)
         {
             m_LanguageType = language;
-            PlayerPrefs.SetInt(mLastUseLanguageType, (int)language);
+            PlayerPrefs.SetInt(m_LastUseLanguageType, (int)language);
             //等待对应语言配置加载完成
             await LoadLanguageConfig();
 
-            for (int i = 0; i < m_LocalizationTextList.Count; i++)
+            foreach (var t in m_LocalizationTextList)
             {
-                m_LocalizationTextList[i]?.Invoke();
+                t?.Invoke();
             }
-            for (int i = 0; i < m_LocalizationFontList.Count; i++)
+            foreach (var t in m_LocalizationFontList)
             {
-                m_LocalizationFontList[i]?.Invoke();
+                t?.Invoke();
             }
             return "";
         }
+        #endregion
+
+        #region  字体切换
 
         /// <summary>
         /// 修改字体
@@ -265,6 +269,9 @@ namespace ZM.UGUIPro
             }
         }
 
+
+        #endregion
+       
         #region 事件监听
         public void AddLanguageChangeListener(System.Action localizationTextCall)
         {

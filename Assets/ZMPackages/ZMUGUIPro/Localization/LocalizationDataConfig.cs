@@ -36,15 +36,16 @@ namespace ZM.UGUIPro
     }
     public class LocalizationDataConfig
     {
- 
         /// <summary>
         /// 多语言配置文件路径
         /// </summary>
-        public const string OUTPUTCONFIGPATH = "ZMUGUIPro/Localization/ExcelData/";
+        public const string CONFIG_PATH = "ExcelData/";
         /// <summary>
         /// 是否异步加载中
         /// </summary>
         private bool IsConfigLoading = false;
+        
+        
         /// <summary>
         /// 加载对应语言配置
         /// </summary>
@@ -53,33 +54,32 @@ namespace ZM.UGUIPro
         public async Task<List<LocalizationData>> LoadConfig(LanguageType languageType)
         {
             if (IsConfigLoading)
+            {
                 return null;
+            }
+            
             IsConfigLoading = true;
 
-            string[] languageNames = Enum.GetNames(typeof(LanguageType));
-            string name = languageNames[(int)languageType];
-            string configPath = "Assets/" + OUTPUTCONFIGPATH + name + "/" + name + ".txt";
-#if UNITY_EDITOR
-            TextAsset textAsset = AssetDatabase.LoadAssetAtPath<TextAsset>(configPath);
-#else
-            //TextAsset textAsset = AssetsManager.Instance.LoadTextAsset(configPath);
-             TextAsset textAsset = Resources.Load<TextAsset>(configPath);
-#endif
-
-
-            if (textAsset != null && textAsset.text != null)
+            //获取语言字符名称
+            string languageName = languageType.ToString();
+            //计算多语言配置文件加载路径
+            string configPath = $"{CONFIG_PATH}{languageName}/{languageName}";
+            //默认Resources加载，需要你根据自己的项目资源加载方式去修改
+            TextAsset textAsset = Resources.Load<TextAsset>(configPath);
+            //验证配置文件是否加载失败
+            if (textAsset == null || string.IsNullOrEmpty(textAsset.text))
             {
-                string json = textAsset.text;
-                List<LocalizationData> localizationDatalist = null;
-                await Task.Run(() =>
-                {
-                   localizationDatalist = JsonConvert.DeserializeObject<List<LocalizationData>>(json);
-                });
                 IsConfigLoading = false;
-                return localizationDatalist;
+                return null;
             }
+            //开始异步加载配置文件
+            List<LocalizationData> localizationDatalist = null;
+            string jsonString = textAsset.text;
+            //反序列化放到子线程中进行，放置配置表过大，导致主线程卡顿
+            await Task.Run(() => { localizationDatalist = JsonConvert.DeserializeObject<List<LocalizationData>>(jsonString); });
+            
             IsConfigLoading = false;
-            return null;
+            return localizationDatalist;
         }
 
         /// <summary>
@@ -87,30 +87,31 @@ namespace ZM.UGUIPro
         /// </summary>
         /// <param name="languageType"></param>
         /// <returns></returns>
-        public List<LocalizationData> LoadConfigEditor(LanguageType languageType)
+        public List<LocalizationData> LoadConfigFormEditor(LanguageType languageType)
         {
             if (IsConfigLoading)
-                return null;
-
-            IsConfigLoading = true;
-            string[] languageNames = Enum.GetNames(typeof(LanguageType));
-            string name = languageNames[(int)languageType];
-            string configPath = "Assets/" + OUTPUTCONFIGPATH + name + "/" + name + ".txt";
-#if UNITY_EDITOR
-            TextAsset textAsset = AssetDatabase.LoadAssetAtPath<TextAsset>(configPath);
-#else
-            TextAsset textAsset = AssetsManager.Instance.LoadTextAsset(configPath);
-#endif
-            if (textAsset != null && textAsset.text != null)
             {
-                string json = textAsset.text;
-                List<LocalizationData> localizationDatalist = null;
-                localizationDatalist = JsonConvert.DeserializeObject<List<LocalizationData>>(json);
-                IsConfigLoading = false;
-                return localizationDatalist;
+                return null;
             }
+            IsConfigLoading = true;
+            //获取语言字符名称
+            string languageName = languageType.ToString();
+            //计算多语言配置文件加载路径
+            string configPath = $"{CONFIG_PATH}{languageName}/{languageName}";
+            //默认Resources加载，需要你根据自己的项目资源加载方式去修改
+            TextAsset textAsset = Resources.Load<TextAsset>(configPath);
+            
+            //验证配置文件是否加载失败
+            if (textAsset == null || string.IsNullOrEmpty(textAsset.text))
+            {
+                IsConfigLoading = false;
+                return null;
+            }
+            
+            string json = textAsset.text;
+            List<LocalizationData> localizationDatalist = JsonConvert.DeserializeObject<List<LocalizationData>>(json);
             IsConfigLoading = false;
-            return null;
+            return localizationDatalist;
         }
     }
 }
