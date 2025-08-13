@@ -24,21 +24,7 @@ namespace ZM.UGUIPro
     public static class TextMeshProDrawEditor
     {
 
-        [MenuItem("GameObject/UI/TextMeshPro")]
-        public static void CreateTextPro()
-        {
-            GameObject root = new GameObject("TextMeshPro", typeof(RectTransform), typeof(TextMeshPro));
-            ResetInCanvasFor((RectTransform)root.transform);
-            root.GetComponent<TextMeshPro>().text = "TextMeshPro";
-            var text = root.GetComponent<TextMeshPro>();
-            text.text = "Text Pro";
-            text.color = Color.white;
-            text.raycastTarget = false;
-            text.rectTransform.sizeDelta = new Vector2(200, 50);
-            text.fontSize = 24;
-            text.alignment = TMPro.TextAlignmentOptions.Midline;
-            root.transform.localPosition = Vector3.zero;
-        }
+       
 
 
         private static bool isCheckLoaclData = false;

@@ -22,25 +22,7 @@ using UnityEngine.UI;
  namespace ZM.UGUIPro {
 	public class ButtonProDrawEditor  
 	{
-	    [MenuItem("GameObject/UI/Button Pro")]
-	    public static void CreateButtonPro()
-	    {
-	        RectTransform buttonProRectTrans = new GameObject("Button Pro", typeof(RectTransform), typeof(Image),typeof(ButtonPro)).GetComponent<RectTransform>();
-	        Text text = new GameObject("Text Pro",typeof(RectTransform), typeof(TextPro)).GetComponent<Text>();
-	        ResetInCanvasFor((RectTransform)buttonProRectTrans.transform);
-	        text.transform.SetParent(buttonProRectTrans);
-	        text.transform.localPosition = Vector3.zero;
-	        text.transform.localScale = Vector3.one;
-	        text.transform.rotation = Quaternion.identity;
-	        text.color = Color.black;
-	        text.text = "Button Pro";
-	        text.fontSize = 24;
-	        text.supportRichText = false;
-	        text.alignment = TextAnchor.MiddleCenter;
-	        text.raycastTarget = false;
-	        buttonProRectTrans.sizeDelta= text.rectTransform.sizeDelta = new Vector2(163,50);
-	        buttonProRectTrans.localPosition = Vector3.zero;
-	    }
+	   
 	
 	
 	

@@ -2,7 +2,7 @@
   "name": "com.zm.uguipro",
   "displayName": "ZMUGUIPro",
   "description": "该插件是一款UGUI拓展插件、包含：超高性能描边、高性能裁剪、文本多语言、图片多语言、按钮长按事件、按钮双击事件、点击缩放、点击音效等",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "unity": "2019.4",
   "license": "MIT",
   "author": "zm",

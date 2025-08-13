@@ -24,21 +24,7 @@ namespace ZM.UGUIPro
     public static class TextProDrawEditor
     {
 
-        [MenuItem("GameObject/UI/Text Pro",priority =0)]
-        public static void CreateTextPro()
-        {
-            GameObject root = new GameObject("Text Pro", typeof(RectTransform), typeof(TextPro));
-            ResetInCanvasFor((RectTransform)root.transform);
-            root.GetComponent<TextPro>().text = "Text Pro";
-            var text = root.GetComponent<TextPro>();
-            text.text = "Text Pro";
-            text.color = Color.white;
-            text.raycastTarget = false;
-            text.rectTransform.sizeDelta = new Vector2(200, 50);
-            text.fontSize = 24;
-            text.alignment = TextAnchor.MiddleCenter;
-            root.transform.localPosition = Vector3.zero;
-        }
+    
 
         public static void TextSpacingGUI(string title, SerializedProperty m_UseTextSpacing, SerializedProperty m_TextSpacing, ref bool m_TextSpacingPanelOpen)
         {
